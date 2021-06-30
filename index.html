@@ -139,21 +139,33 @@
         </div>
         <div class="row justify-content-center">
           <div class="col-md-6">
-            <form>
+            <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+              <strong>Thankyou!</strong> Your message has been accepted!
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="alert alert-danger alert-dismissible fade show d-none error-alert" role="alert">
+              <strong>Warning!</strong> Your message cannot be submited!
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <form name="wpu-contact-form">
               <div class="mb-3">
                 <label for="name" class="form-label">Nama Lengkap</label>
-                <input type="text" class="form-control" id="name" aria-describedby="name" />
+                <input type="text" class="form-control" id="name" aria-describedby="name" name="nama" />
               </div>
               <div class="mb-3">
                 <label for="InputEmail1" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="InputEmail1" aria-describedby="emailHelp" />
+                <input type="email" class="form-control" id="InputEmail1" aria-describedby="emailHelp" name="email" />
               </div>
               <div class="mb-3">
                 <label for="pesan" class="form-label">Pesan</label>
-                <textarea class="form-control" id="pesan" rows="3"></textarea>
+                <textarea class="form-control" id="pesan" rows="3" name="pesan"></textarea>
               </div>
 
-              <button type="submit" class="btn btn-warning">Kirim</button>
+              <button type="submit" class="btn btn-warning btn-kirim text-white">Kirim</button>
+              <button class="btn btn-warning btn-loading text-white d-none" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
             </form>
           </div>
         </div>
@@ -169,11 +181,48 @@
     <!-- End Contact -->
 
     <!-- Footer -->
-    <footer class="bg-warning text-white text-center pb-5">
+    <footer class="bg-warning text-white text-center pb-5 pt-1">
       <p>Created with <i class="bi bi-heart-fill text-danger"></i> by <a href="" class="text-white fw-bold">Dadan Supiana Hidayat</a></p>
     </footer>
     <!-- End Footer -->
+
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Script Form -->
+    <script>
+      const scriptURL = "https://script.google.com/macros/s/AKfycbzBHKqY_3w9Me8UxVu9jg6sZcHI8tllyEVsWV8Q05Rfq9VouIQvdS62u_Re_9y0PziU/exec";
+      const form = document.forms["wpu-contact-form"];
+      const btnKirim = document.querySelector(".btn-kirim");
+      const btnLoading = document.querySelector(".btn-loading");
+      const myAlert = document.querySelector(".my-alert");
+      const errAlert = document.querySelector(".error-alert");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        // ketika tombol submit di klik
+        // tampilkan tombol loading, hilangkan tombol kirim
+
+        btnLoading.classList.toggle("d-none");
+        btnKirim.classList.toggle("d-none");
+
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            // ketika tombol submit di klik
+            // Hialngkan tombol loading, tampilkan tombol kirim
+
+            btnLoading.classList.toggle("d-none");
+            btnKirim.classList.toggle("d-none");
+
+            // tampilkan Alert Berhasil
+            myAlert.classList.toggle("d-none");
+
+            // reset form
+            form.reset();
+            console.log("Success!", response);
+          })
+          .catch((error) => console.error("Error!", error.message));
+      });
+    </script>
   </body>
 </html>
